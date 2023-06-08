@@ -3,7 +3,7 @@ public with sharing class ReusableLookupController {
     @AuraEnabled
     public static List<ResultWrapper> fetchRecords(SearchWrapper inputWrapper) {
         try {
-            if(inputWrapper != null){
+            if(inputWrapper != null) {
                 String fieldsToQuery = 'SELECT Id, ';
                 if(string.isNotBlank(inputWrapper.fieldApiName)){
                     fieldsToQuery = fieldsToQuery + inputWrapper.fieldApiName;
@@ -12,16 +12,20 @@ public with sharing class ReusableLookupController {
                     fieldsToQuery = fieldsToQuery + ', ' + inputWrapper.otherFieldApiName;
                 }
                 String query = fieldsToQuery + ' FROM '+ inputWrapper.objectApiName;
+
                 String filterCriteria = inputWrapper.fieldApiName + ' LIKE ' + '\'' + String.escapeSingleQuotes(inputWrapper.searchString.trim()) + '%\' LIMIT 10';
+
                 if(String.isNotBlank(inputWrapper.selectedRecordId)) {
                     query += ' WHERE Id = \''+ inputWrapper.selectedRecordId + '\'';
-                }else if(String.isNotBlank(inputWrapper.parentFieldApiName) && String.isNotBlank(inputWrapper.parentRecordId)){
+                }
+                else if(String.isNotBlank(inputWrapper.parentFieldApiName) && String.isNotBlank(inputWrapper.parentRecordId)){
                     query += ' WHERE '+ inputWrapper.parentFieldApiName+ ' = \''+ inputWrapper.parentRecordId + '\'';
                     query += ' AND ' + filterCriteria;
                 }
                 else {
                     query += ' WHERE '+ filterCriteria;
                 }
+
                 List<ResultWrapper> returnWrapperList = new List<ResultWrapper>();
                 for(SObject s : Database.query(query)) {
                     ResultWrapper wrap = new ResultWrapper();

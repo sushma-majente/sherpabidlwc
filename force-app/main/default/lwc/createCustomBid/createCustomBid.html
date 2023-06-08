@@ -1,6 +1,6 @@
 <template>
-    <section tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
-        class="slds-modal__container slds-modal slds-fade-in-open slds-modal_large">
+    <!-- <section tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+        class="slds-modal slds-fade-in-open slds-modal_large"> -->
         <div class="slds-modal__header">
             <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Create New Bid</h1>
         </div>
@@ -44,9 +44,8 @@
                                     value={acc.AnnualRevenue}>
                                 </lightning-input> -->
 
-                                <c-product-reusable-lookup label="Parent Account" selected-icon-name="standard:account"
-                                    object-label="Account" object-api-name="Account" field-api-name="Name"
-                                    other-field-api-name="Industry" onvalueselected= {handleValueSelectedOnAccount}>
+                                <c-product-reusable-lookup label="" selected-icon-name="standard:account"
+                                    object-label="Product" object-api-name="Product2" field-api-name="Name">
                                 </c-product-reusable-lookup>
 
                             </td>
@@ -95,5 +94,5 @@
             <button class="slds-button slds-button_neutral" aria-label="Cancel and close">Cancel</button>
             <button class="slds-button slds-button_brand">Save</button>
         </div>
-    </section>
+    <!-- </section> -->
 </template>

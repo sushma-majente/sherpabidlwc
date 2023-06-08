@@ -1,6 +1,9 @@
 import { api, LightningElement, wire,track } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 import getAccountById from '@salesforce/apex/BidHandler.getAccountById';
+import { loadStyle } from "lightning/platformResourceLoader";
+import modal from "@salesforce/resourceUrl/CreateBidCss";
+
 
 export default class CreateCustomBid extends LightningElement {
     @api recordId;
@@ -25,6 +28,7 @@ export default class CreateCustomBid extends LightningElement {
 
     connectedCallback() {
         try {
+            loadStyle(this, modal);
             getAccountById({id : this.recordId})
             .then(accountResult => {
                 console.info('accountResult', accountResult);

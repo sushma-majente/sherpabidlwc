@@ -7,13 +7,13 @@ export default class ProductReusableLookup extends LightningElement {
     @api label = "";
     @api required;
     @api selectedIconName = "standard:account";
-    @api objectLabel = "Account";
+    @api objectLabel = "Product";
     recordsList = [];
     selectedRecordName;
 
-    @api objectApiName = "Account";
+    @api objectApiName = "Product2";
     @api fieldApiName = "Name";
-    @api otherFieldApiName = "Industry";
+    @api otherFieldApiName = "";
     @api searchString = "";
     @api selectedRecordId = "";
     @api parentRecordId;
@@ -38,9 +38,9 @@ export default class ProductReusableLookup extends LightningElement {
     }
 
     connectedCallback() {
-        if (this.selectedRecordId) {
+        // if (this.selectedRecordId) {
             this.fetchSobjectRecords(true);
-        }
+        // }
     }
 
     //call the apex method
@@ -88,7 +88,6 @@ export default class ProductReusableLookup extends LightningElement {
     handleSelect(event) {
         let selectedRecord = {
             mainField: event.currentTarget.dataset.mainfield,
-            subField: event.currentTarget.dataset.subfield,
             id: event.currentTarget.dataset.id
         };
         this.selectedRecordId = selectedRecord.id;
