@@ -1,98 +1,101 @@
 <template>
-    <!-- <section tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
-        class="slds-modal slds-fade-in-open slds-modal_large"> -->
-        <div class="slds-modal__header">
-            <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Create New Bid</h1>
-        </div>
-        <div class="slds-modal__content" id="modal-content-id-1">
-            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
-                <thead>
-                    <tr>
-                        <!-- <th scope="col">
-                            <div class="slds-truncate" title="Account Name">Account Name</div>
-                        </th> -->
-                        <th scope="col">
-                            <div class="slds-truncate" title="Product">Product</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Quantity">Quantity</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="List Price">List Price</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Discount">Discount</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Total Price">Total Price</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Add Row">Add</div>
-                        </th>
-                        <th scope="col">
-                            <div class="slds-truncate" title="Remove Row">Remove</div>
-                        </th>
-                    </tr>
-                </thead>
 
-                <tbody>
-                    <template for:each={createBidList} for:item="bid" for:index="index">
-                        <tr key={keyIndex}>
-                            <td>
-                                <!-- custom control for Product -->
-                                <!-- <lightning-input name="bidProduct" access-key= {index} id={index} type="text"
+
+    <div class="slds-modal__header">
+        <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Create New Bid</h1>
+    </div>
+
+    <div>
+        <lightning-input name="bidName" style="margin: 10px 10px 10px 10px;width: 250px;" type="text" label="Quote Name"
+            title="Quote Name" value={bidName} onchange={handleBidNameChange}> </lightning-input>
+    </div>
+
+    <div id="modal-content-id-1">
+        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Product">Product</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Quantity">Quantity</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="List Price">List Price</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Discount">Discount</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Total Price">Total Price</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Add Row">Add</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate" title="Remove Row">Remove</div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <template for:each={createBidList} for:item="bid" for:index="index">
+                    <tr key= {keyIndex}>
+                        <td>
+                            <!-- custom control for Product -->
+                            <!-- <lightning-input name="bidProduct" access-key= {index} id={index} type="text"
                                     value={acc.AnnualRevenue}>
                                 </lightning-input> -->
 
-                                <c-product-reusable-lookup label="" selected-icon-name="standard:account"
-                                    object-label="Product" object-api-name="Product2" field-api-name="Name">
-                                </c-product-reusable-lookup>
+                            <c-product-reusable-lookup label="" selected-icon-name="standard:account"
+                                onvalueselected= {handleValueSelectedOnAccount} object-label="Product"
+                                access-key= {index} required = {isRequired}
+                                object-api-name="Product2" field-api-name="Name">
+                            </c-product-reusable-lookup>
 
-                            </td>
+                        </td>
 
-                            <td>
-                                <lightning-input name="bidQuantity" access-key={index} id={index} type="text"
-                                    value={bid.Quantity}>
-                                </lightning-input>
-                            </td>
+                        <td>
+                            <lightning-input name="bidQuantity" onchange= {handleQuantityChange} access-key={index} id={index} type="text"
+                                value={bid.Quantity}>
+                            </lightning-input>
+                        </td>
 
-                            <td>
-                                <lightning-input name="bidListPrice" access-key={index} id={index} type="text"
-                                    value={bid.ListPrice}>
-                                </lightning-input>
-                            </td>
+                        <td>
+                            <lightning-input name="bidListPrice" access-key={index} id={index} type="text"
+                                value={bid.ListPrice}>
+                            </lightning-input>
+                        </td>
 
-                            <td>
-                                <lightning-input name="bidDiscount" access-key={index} id={index} type="text"
-                                    value={bid.Discount}>
-                                </lightning-input>
-                            </td>
-                            <td>
-                                <lightning-input name="bidTotalPrice" access-key={index} id={index} type="text"
-                                    value={bid.TotalPrice}>
-                                </lightning-input>
-                            </td>
+                        <td>
+                            <lightning-input name="bidDiscount" access-key={index} id={index} type="text"
+                                value={bid.Discount}>
+                            </lightning-input>
+                        </td>
+                        <td>
+                            <lightning-input name="bidTotalPrice" access-key={index} id={index} type="text"
+                                value={bid.TotalPrice}>
+                            </lightning-input>
+                        </td>
 
-                            <td>
-                                <lightning-button variant="brand" label="Add" title="Add" onclick={addRow}
-                                    class="slds-m-left_x-small">
-                                </lightning-button>
-                            </td>
+                        <td>
+                            <lightning-button-icon icon-name="utility:add" alternative-text="Add" onclick= {addRow}
+                                class="test slds-m-left_xx-small" access-key={index} title="Add"></lightning-button-icon>
 
-                            <td>
-                                <lightning-button variant="brand" label="Remove" title="Remove" onclick={removeRow}
-                                    class="slds-m-left_x-small">
-                                </lightning-button>
-                            </td>
+                        </td>
 
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
-        </div>
-        <div class="slds-modal__footer slds-m-top_xx-large">
-            <button class="slds-button slds-button_neutral" aria-label="Cancel and close">Cancel</button>
-            <button class="slds-button slds-button_brand">Save</button>
-        </div>
-    <!-- </section> -->
+                        <td>
+                            <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" onclick= {removeDynamicRow}
+                                class="test slds-m-left_xx-small" access-key={index} title="Delete"></lightning-button-icon>
+                        </td>
+
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+    </div>
+    <div class="slds-modal__footer slds-m-top_xx-large">
+        <!-- <button class="slds-button slds-button_neutral" aria-label="Cancel and close">Cancel</button> -->
+        <button class="slds-button slds-button_brand" onclick= {handleCreateBid} >Save</button>
+    </div>
 </template>

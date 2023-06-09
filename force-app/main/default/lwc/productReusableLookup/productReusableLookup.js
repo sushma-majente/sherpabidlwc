@@ -3,7 +3,7 @@ import fetchRecords from '@salesforce/apex/ReusableLookupController.fetchRecords
 const DELAY = 500;
 
 export default class ProductReusableLookup extends LightningElement {
-    @api helpText = "custom search lookup";
+    @api helpText = "Product Search Lookup";
     @api label = "";
     @api required;
     @api selectedIconName = "standard:account";
@@ -18,6 +18,7 @@ export default class ProductReusableLookup extends LightningElement {
     @api selectedRecordId = "";
     @api parentRecordId;
     @api parentFieldApiName;
+    @api accessKey;
 
     get methodInput() {
         return {
@@ -38,6 +39,7 @@ export default class ProductReusableLookup extends LightningElement {
     }
 
     connectedCallback() {
+        console.log(this.accessKey);
         // if (this.selectedRecordId) {
             this.fetchSobjectRecords(true);
         // }
@@ -80,7 +82,7 @@ export default class ProductReusableLookup extends LightningElement {
         this.preventClosingOfSerachPanel = true;
     }
     //handler for deselection of the selected item
-    handleCommit() {
+    @api handleCommit() {
         this.selectedRecordId = "";
         this.selectedRecordName = "";
     }
@@ -88,14 +90,15 @@ export default class ProductReusableLookup extends LightningElement {
     handleSelect(event) {
         let selectedRecord = {
             mainField: event.currentTarget.dataset.mainfield,
-            id: event.currentTarget.dataset.id
+            id: event.currentTarget.dataset.id,
+            index: this.accessKey
         };
         this.selectedRecordId = selectedRecord.id;
         this.selectedRecordName = selectedRecord.mainField;
         this.recordsList = [];
         // Creates the event
         const selectedEvent = new CustomEvent('valueselected', {
-            detail: selectedRecord
+            detail: { selectedRecord }
         });
         //dispatching the custom event
         this.dispatchEvent(selectedEvent);
