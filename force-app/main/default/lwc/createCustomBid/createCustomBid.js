@@ -35,8 +35,6 @@ export default class CreateCustomBid extends LightningElement {
                 .then(accountResult => {
                     console.info('accountResult', accountResult);
                     this.accountRecord = accountResult[0];
-
-                    // Assigning Values for 0th Index
                     this.createBidList[this.keyIndex].AccountId = this.accountRecord.Id;
                     this.createBidList[this.keyIndex].Discount = this.accountRecord.Discount__c;
 
@@ -50,7 +48,7 @@ export default class CreateCustomBid extends LightningElement {
     }
 
     createNewItem() {
-        this.keyIndex = this.keyIndex + 1;
+        this.keyIndex + 1;
         this.createBidList.push({
             ProductId: '',
             AccountId: this.accountRecord.Id,
@@ -66,8 +64,6 @@ export default class CreateCustomBid extends LightningElement {
     }
 
     handleValueSelectedOnAccount(event) {
-        // console.log(event.detail.selectedRecord.mainField);
-        // console.log(event.detail.selectedRecord.index);
         this.createBidList[event.detail.selectedRecord.index].ProductId = event.detail.selectedRecord.id;
     }
 
@@ -80,20 +76,36 @@ export default class CreateCustomBid extends LightningElement {
         const index = event.target.accessKey;
         if (this.createBidList.length >= 1) {
             this.createBidList.splice(index, 1);
-            // this.keyIndex = this.keyIndex - 1;
+            // alert(this.template.querySelectorAll("c-product-reusable-lookup").length);
+
             // const userInputs = this.template.querySelectorAll("c-product-reusable-lookup")[event.target.accessKey];
+            let table = document.querySelector("table");
+            table.deleteRow(index);
+
+            // alert(userInputs.selectedRecordName);
             // userInputs.handleCommit();
+            
+            this.keyIndex - 1;
+            // var table = document.getElementById('newtable');
+            // this.template.querySelector("tr").deleteRow(event.target.accessKey);
+            // const local = this.template.querySelectorAll("tr")[event.target.accessKey];
+            // this.template.querySelectorAll("tr").removeChild(local);
             // this.template.querySelectorAll("c-product-reusable-lookup").removeChild(userInputs);
         }
     }
 
-    handleQuantityChange(event) {
-        console.log(event.target.name);
+    handleChange(event) {
         if (event.target.name == 'bidQuantity') {
             this.createBidList[event.target.accessKey].Quantity = event.target.value;
         }
         if (event.target.name == 'bidDiscount') {
             this.createBidList[event.target.accessKey].Discount = event.target.value;
+        }
+        if (event.target.name == 'bidTotalPrice') {
+            this.createBidList[event.target.accessKey].TotalPrice = event.target.value;
+        }
+        if (event.target.name == 'bidListPrice') {
+            this.createBidList[event.target.accessKey].ListPrice = event.target.value;
         }
     }
 }

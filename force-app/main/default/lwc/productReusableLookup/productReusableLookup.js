@@ -1,4 +1,4 @@
-import { LightningElement, api  } from 'lwc';
+import { LightningElement, api, track  } from 'lwc';
 import fetchRecords from '@salesforce/apex/ReusableLookupController.fetchRecords';
 const DELAY = 500;
 
@@ -9,7 +9,7 @@ export default class ProductReusableLookup extends LightningElement {
     @api selectedIconName = "standard:account";
     @api objectLabel = "Product";
     recordsList = [];
-    selectedRecordName;
+    @api selectedRecordName='';
 
     @api objectApiName = "Product2";
     @api fieldApiName = "Name";
@@ -39,7 +39,7 @@ export default class ProductReusableLookup extends LightningElement {
     }
 
     connectedCallback() {
-        console.log(this.accessKey);
+        console.log('Child control Index:: ', this.accessKey);
         // if (this.selectedRecordId) {
             this.fetchSobjectRecords(true);
         // }
