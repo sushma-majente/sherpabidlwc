@@ -30,7 +30,7 @@ public with sharing class ReusableLookupController {
                 for(SObject s : Database.query(query)) {
                     ResultWrapper wrap = new ResultWrapper();
                     wrap.mainField = (String)s.get(inputWrapper.fieldApiName);
-                    wrap.subField = (String)s.get(inputWrapper.otherFieldApiName);
+                    // wrap.subField = (String)s.get(inputWrapper.otherFieldApiName);
                     wrap.id = (String)s.get('id');
                     returnWrapperList.add(wrap);
                 }
