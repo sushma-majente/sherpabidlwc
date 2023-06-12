@@ -39,9 +39,9 @@
 
             <tbody id="tableBody">
                 <template for:each={createBidList} for:item="bid" for:index="index">
-                    <tr key= {keyIndex}>
+                    <tr key= {keyIndex} class="eachRowTr">
                         <td>
-                            <c-product-reusable-lookup label="" selected-icon-name="standard:account"
+                            <c-product-reusable-lookup label="" selected-icon-name="standard:account" onchange= {handleChange}
                                 onvalueselected={handleValueSelectedOnAccount} object-label="Product" access-key= {index} id={index}
                                 required={isRequired} object-api-name="Product2" field-api-name="Name">
                             </c-product-reusable-lookup>

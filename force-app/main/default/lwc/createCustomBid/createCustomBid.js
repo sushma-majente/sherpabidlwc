@@ -94,35 +94,16 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
         if (this.createBidList.length > 1) {
             this.createBidList.splice(index, 1);
             this.keyIndex - 1;
-            // alert(this.createBidList.length);
-            // console.log(this.createBidList);
 
-            
-            const userInputs = this.template.querySelectorAll("c-product-reusable-lookup")[event.target.accessKey];
-            // userInputs.isValueSelected = false;
+            const userInputs = this.template.querySelectorAll("c-product-reusable-lookup")[index];
+            const totalComponents = this.template.querySelectorAll("c-product-reusable-lookup");
+
+            for (let i = index ; i < totalComponents.length; i++) {
+                const element = this.template.querySelectorAll("c-product-reusable-lookup")[i];
+                element.selectedRecordId = this.template.querySelectorAll("c-product-reusable-lookup")[i+1].selectedRecordId;
+                element.selectedRecordName = this.template.querySelectorAll("c-product-reusable-lookup")[i+1].selectedRecordName;
+            }
             userInputs.handleCommit();
-
-            // this.template.querySelector(keyIndex).style.display = 'none';
-
-
-            //const userInputs = this.template.querySelectorAll("c-product-reusable-lookup")[event.target.accessKey];
-
-            // this.template.querySelector(`lightning-textarea[data-id="${event.target.accessKey}"]`).classList.toggle('slds-hide');
-
-            // alert(this.template.querySelectorAll("c-product-reusable-lookup").length);
-
-            // const userInputs = this.template.querySelectorAll("c-product-reusable-lookup")[event.target.accessKey];
-            // let table = document.querySelector("table");
-            // table.deleteRow(index);
-
-            // alert(userInputs.selectedRecordName);
-            // userInputs.handleCommit();
-
-            // var table = document.getElementById('newtable');
-            // this.template.querySelector("tr").deleteRow(event.target.accessKey);
-            // const local = this.template.querySelectorAll("tr")[event.target.accessKey];
-            // this.template.querySelectorAll("tr").removeChild(local);
-            // this.template.querySelectorAll("c-product-reusable-lookup").removeChild(userInputs);
         }
         else {
             const evt = new ShowToastEvent({
