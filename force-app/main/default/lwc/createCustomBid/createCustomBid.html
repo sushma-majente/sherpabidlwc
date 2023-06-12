@@ -5,8 +5,8 @@
     </div>
 
     <div>
-        <lightning-input name="bidName" style="margin: 10px 10px 10px 10px;width: 250px;" type="text" label="Quote Name"
-            title="Quote Name" value={bidName} onchange={handleBidNameChange}> </lightning-input>
+        <lightning-input class="validate" name="bidName" style="margin: 10px 10px 10px 10px;width: 250px;" type="text" label="Quote Name"
+            title="Quote Name" value= {bidName} required onchange= {handleBidNameChange}> </lightning-input>
     </div>
 
     <div id="modal-content-id-1">
@@ -37,35 +37,36 @@
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="tableBody">
                 <template for:each={createBidList} for:item="bid" for:index="index">
-                    <tr key={keyIndex}>
+                    <tr key= {keyIndex}>
                         <td>
-                            <c-product-reusable-lookup id={keyIndex} label="" selected-icon-name="standard:account"
-                                onvalueselected={handleValueSelectedOnAccount} object-label="Product" access-key={index}
+                            <c-product-reusable-lookup label="" selected-icon-name="standard:account"
+                                onvalueselected={handleValueSelectedOnAccount} object-label="Product" access-key= {index} id={index}
                                 required={isRequired} object-api-name="Product2" field-api-name="Name">
                             </c-product-reusable-lookup>
                         </td>
 
                         <td>
-                            <lightning-input name="bidQuantity" onchange={handleChange} access-key={index} id={index}
-                                type="text" value={bid.Quantity}>
+                            <lightning-input name="bidQuantity" required onchange={handleChange} access-key={index} id={index}
+                                type="number" value={bid.Quantity}>
                             </lightning-input>
                         </td>
 
                         <td>
-                            <lightning-input name="bidListPrice" onchange={handleChange} access-key={index} id={index}
+                            <lightning-input name="bidListPrice" disabled="true" onchange={handleChange} access-key={index} id={index}
                                 type="text" value={bid.ListPrice}>
                             </lightning-input>
                         </td>
 
                         <td>
-                            <lightning-input name="bidDiscount" onchange={handleChange} access-key={index} id={index}
-                                type="text" value={bid.Discount}>
+                            <lightning-input name="bidDiscount" min="0" max="100" disabled="true"
+                                                onchange={handleChange} access-key={index} id={index}
+                                type="number" value={bid.Discount}>
                             </lightning-input>
                         </td>
                         <td>
-                            <lightning-input name="bidTotalPrice" onchange={handleChange} access-key={index} id={index}
+                            <lightning-input name="bidTotalPrice" disabled="true" onchange={handleChange} access-key={index} id={index}
                                 type="text" value={bid.TotalPrice}>
                             </lightning-input>
                         </td>
@@ -89,7 +90,6 @@
         </table>
     </div>
     <div class="slds-modal__footer slds-m-top_xx-large">
-        <!-- <button class="slds-button slds-button_neutral" aria-label="Cancel and close">Cancel</button> -->
         <button class="slds-button slds-button_brand" onclick={handleCreateBid}>Save</button>
     </div>
 </template>

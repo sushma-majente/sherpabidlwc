@@ -4,7 +4,7 @@
             <div class="slds-combobox_container" if:false= {isValueSelected}>
                 <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click slds-is-open">
                     <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
-                        <lightning-input onchange= {handleChange} type="search" autocomplete="on" label= {label}
+                        <lightning-input data-id='username' onchange= {handleChange} type="search" autocomplete="on" label= {label}
                             required= {required} field-level-help= {helpText} placeholder= {placeholder}
                             onblur= {handleInputBlur}></lightning-input>
                     </div>
