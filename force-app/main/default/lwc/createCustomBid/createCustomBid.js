@@ -29,7 +29,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             loadStyle(this, modal);
             getAccountById({ id: this.recordId })
                 .then(accountResult => {
-                    console.info('accountResult', accountResult);
+                    // console.info('accountResult', accountResult);
                     this.accountRecord = accountResult[0];
 
                     this.createBidList.push({
@@ -38,15 +38,16 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                         Quantity: '',
                         ListPrice: '',
                         Discount: this.accountRecord.Discount__c,
-                        TotalPrice: ''
+                        TotalPrice: '',
+                        DiscountAmount : 0
                     });
 
                 }).catch(error => {
-                    console.error(error);
+                    // console.error(error);
                 })
         }
         catch (error) {
-            console.error(error);
+            // console.error(error);
         }
     }
 
@@ -60,14 +61,14 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             , pricebookname: 'Standard Price Book'
         })
             .then(result => {
-                console.log(`Result is ${result}`);
+                // console.log(`Result is ${result}`);
                 this.createBidList[event.detail.selectedRecord.index].ProductId = event.detail.selectedRecord.id;
                 this.createBidList[event.detail.selectedRecord.index].ListPrice = result != undefined && result.length > 0 ? result[0].UnitPrice : 0;
                 this.createBidList[event.detail.selectedRecord.index].PriceBookEntryId = result[0].Id;
                 this.calculateListPrice(event.detail.selectedRecord.index);
             })
             .catch(error => {
-                console.info(error);
+                // console.info(error);
             });
     }
 
@@ -83,13 +84,14 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             Quantity: '',
             ListPrice: '',
             Discount: this.accountRecord.Discount__c,
-            TotalPrice: ''
+            TotalPrice: '',
+            DiscountAmount : 0
         });
-        console.log(this.keyIndex ,'==>', this.createBidList);
+        // console.log(this.keyIndex ,'==>', this.createBidList);
     }
 
     removeDynamicRow(event) {
-        console.info('Before remove Index :: ', event.target.accessKey);
+        // console.info('Before remove Index :: ', event.target.accessKey);
         const index = event.target.accessKey;
         if (this.createBidList.length > 1) {
             this.createBidList.splice(index, 1);
@@ -98,10 +100,10 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             const userInputs = this.template.querySelectorAll("c-product-reusable-lookup")[index];
             const totalComponents = this.template.querySelectorAll("c-product-reusable-lookup");
 
-            for (let i = index ; i < totalComponents.length; i++) {
+            for (let i = index; i < totalComponents.length; i++) {
                 const element = this.template.querySelectorAll("c-product-reusable-lookup")[i];
-                element.selectedRecordId = this.template.querySelectorAll("c-product-reusable-lookup")[i+1].selectedRecordId;
-                element.selectedRecordName = this.template.querySelectorAll("c-product-reusable-lookup")[i+1].selectedRecordName;
+                element.selectedRecordId = this.template.querySelectorAll("c-product-reusable-lookup")[i + 1].selectedRecordId;
+                element.selectedRecordName = this.template.querySelectorAll("c-product-reusable-lookup")[i + 1].selectedRecordName;
             }
             userInputs.handleCommit();
         }
@@ -117,6 +119,8 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
     }
 
     handleChange(event) {
+        this.totalListValue = 0;
+        this.totalPriceValue = 0;
         if (event.target.name == 'bidQuantity') {
             this.createBidList[event.target.accessKey].Quantity = event.target.value;
             this.calculateListPrice(event.target.accessKey);
@@ -131,12 +135,19 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
         if (event.target.name == 'bidListPrice') {
             this.createBidList[event.target.accessKey].ListPrice = event.target.value;
         }
+        if(event.target.name == 'bidDiscountAmount') {
+            this.createBidList[event.target.accessKey].DiscountAmount = event.target.value;
+            this.calculateListPrice(event.target.accessKey);
+        }
+
+        this.aggregateValues();
     }
 
     calculateListPrice(currentIndex) {
         let totalValue = (this.createBidList[currentIndex].Quantity * this.createBidList[currentIndex].ListPrice);
         let discountedValue = totalValue * (this.createBidList[currentIndex].Discount / 100);
-        this.createBidList[currentIndex].TotalPrice = totalValue - discountedValue;
+        let discountAmount = this.createBidList[currentIndex].DiscountAmount != undefined && this.createBidList[currentIndex].DiscountAmount != '' ? this.createBidList[currentIndex].DiscountAmount: 0;
+        this.createBidList[currentIndex].TotalPrice = Math.round(( parseFloat((totalValue - discountedValue) - discountAmount)  + Number.EPSILON) * 100) / 100 ;
     }
 
     handleCreateBid(event) {
@@ -161,15 +172,21 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             }
         }
 
-         if(!this.isInputValid() && !canByPassToSave){
-            canByPassToSave = false;
-         }
+        let isQuoteNameValid = this.isInputValid();
 
+        if (!isQuoteNameValid) {
+            canByPassToSave = false;
+        }
 
         if (!canByPassToSave) {
             this.showValidationToast();
         }
         else {
+            this.saveQuoteLineItems();
+        }
+    }
+
+    saveQuoteLineItems() {
         SaveMultipleBids({
             jsonString: JSON.stringify(this.createBidList),
             QuoteName: this.bidName
@@ -179,22 +196,18 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                 let quoteId = saveResult.Id;
                 this.showSuccessToast(quoteName, quoteId);
             }).catch(error => {
-                console.error(`Errrr ::  ${error}`);
+                // console.error(`Errrr ::  ${error}`);
             });
-        }
-
-
     }
 
     isInputValid() {
         let isValid = true;
         let inputFields = this.template.querySelectorAll('.validate');
         inputFields.forEach(inputField => {
-            if(!inputField.checkValidity()) {
+            if (!inputField.checkValidity()) {
                 inputField.reportValidity();
                 isValid = false;
             }
-            // this.contact[inputField.name] = inputField.value;
         });
         return isValid;
     }
@@ -234,6 +247,21 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                 actionName: 'view'
             }
         });
+    }
+
+    @track totalListValue = 0;
+    @track totalPriceValue =0 ;
+
+    aggregateValues() {
+        for (let index = 0; index < this.createBidList.length; index++) {
+            const element = this.createBidList[index];
+            if (element.ListPrice != undefined && element.ListPrice != '') {
+                this.totalListValue += parseInt(element.Quantity)  * parseFloat(element.ListPrice);
+            }
+            if (element.TotalPrice != undefined && element.TotalPrice != '') {
+                this.totalPriceValue += parseFloat(element.TotalPrice);
+            }
+        }
     }
 
 }

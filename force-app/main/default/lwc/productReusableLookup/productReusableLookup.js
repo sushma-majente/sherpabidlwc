@@ -13,7 +13,7 @@ export default class ProductReusableLookup extends LightningElement {
 
     @api objectApiName = "Product2";
     @api fieldApiName = "Name";
-    @api otherFieldApiName = "";
+    @api otherFieldApiName = "Description_1__c";
     @api searchString = "";
     @api selectedRecordId = "";
     @api parentRecordId;

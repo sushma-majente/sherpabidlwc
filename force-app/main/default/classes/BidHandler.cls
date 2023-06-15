@@ -11,9 +11,7 @@ public with sharing class BidHandler {
     @AuraEnabled
     public static List<PRICEBOOKENTRY> getUnitPriceByProduct(string product2Id, string pricebookname){
         try {
-            return [SELECT Id, UnitPrice, PRICEBOOK2.NAME FROM PRICEBOOKENTRY where isactive = true 
-                    and PRICEBOOK2.NAME =:pricebookname
-                    AND Product2Id =: product2Id];
+            return [SELECT Id, UnitPrice, PRICEBOOK2.NAME FROM PRICEBOOKENTRY where isactive = true and PRICEBOOK2.NAME =:pricebookname AND Product2Id =: product2Id];
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

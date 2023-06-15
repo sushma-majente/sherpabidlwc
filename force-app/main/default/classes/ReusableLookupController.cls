@@ -13,7 +13,7 @@ public with sharing class ReusableLookupController {
                 }
                 String query = fieldsToQuery + ' FROM '+ inputWrapper.objectApiName;
 
-                String filterCriteria = inputWrapper.fieldApiName + ' LIKE ' + '\'' + String.escapeSingleQuotes(inputWrapper.searchString.trim()) + '%\' LIMIT 10';
+                String filterCriteria = inputWrapper.fieldApiName + ' LIKE ' + '\'' + String.escapeSingleQuotes(inputWrapper.searchString.trim()) + '%\' AND ISACTIVE = TRUE LIMIT 10';
 
                 if(String.isNotBlank(inputWrapper.selectedRecordId)) {
                     query += ' WHERE Id = \''+ inputWrapper.selectedRecordId + '\'';
@@ -30,7 +30,7 @@ public with sharing class ReusableLookupController {
                 for(SObject s : Database.query(query)) {
                     ResultWrapper wrap = new ResultWrapper();
                     wrap.mainField = (String)s.get(inputWrapper.fieldApiName);
-                    // wrap.subField = (String)s.get(inputWrapper.otherFieldApiName);
+                    wrap.subField = (String)s.get(inputWrapper.otherFieldApiName);
                     wrap.id = (String)s.get('id');
                     returnWrapperList.add(wrap);
                 }
