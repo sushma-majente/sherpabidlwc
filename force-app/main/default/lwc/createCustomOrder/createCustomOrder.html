@@ -1,0 +1,201 @@
+<template>
+    <div class="slds-modal__header">
+        <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">Create New Order</h1>
+    </div>
+
+    <div class="slds-grid slds-wrap slds-m-top_large">
+        <div class="slds-col .slds-size_2-of-4 slds-m-left_small">
+            <div class="slds-col slds-size_2-of-4 slds-m-left_small">
+                <lightning-input name="RefPONumber" type="text" label="Reference/PO Number" title="Reference/PO Number"
+                    onchange={handlePONumberChange} value={referencePONumber} required>
+                </lightning-input>
+            </div>
+
+            <div class="slds-col slds-size_2-of-4 slds-m-left_small">
+                <template if:true={orderSourceValues.data}>
+                    <lightning-combobox class="validate" name="progress" label="Order Type" value={selectedOrderType}
+                        required options={orderSourceValues.data.values} onchange={handleOrderTypeChange}>
+                    </lightning-combobox>
+                </template>
+            </div>
+            <div class="slds-col slds-size_2-of-4 slds-m-left_small">
+                <template if:true={shippingSourceValues.data}>
+                    <lightning-combobox name="progressA" label="Shipping Method" value={selectedShippingType}
+                        options={shippingSourceValues.data.values} onchange={handleShippingType}>
+                    </lightning-combobox>
+                </template>
+            </div>
+        </div>
+
+        <div class="slds-col .slds-size_2-of-4 slds-m-left_small">
+            <div class="slds-col slds-size_2-of-4 slds-m-left_small">
+                <lightning-textarea class="validate" name="RefPONumber" type="text" label="Special Comments"
+                    title="Special Comments" onchange={handleSpecialInstructions} value={splInstructions}>
+                </lightning-textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- <div class="slds-grid slds-wrap slds-m-top_large">
+        <div class="slds-col slds-size_3-of-12 slds-m-left_small">
+            <lightning-input name="RefPONumber" type="text" label="Reference/PO Number" title="Reference/PO Number"
+                onchange={handlePONumberChange} value={referencePONumber} required>
+            </lightning-input>
+        </div>
+
+        <div class="slds-col slds-size_3-of-12 slds-m-left_small">
+            <template if:true={orderSourceValues.data}>
+                <lightning-combobox class="validate" name="progress" label="Order Type" value={selectedOrderType}
+                    required options={orderSourceValues.data.values} onchange={handleOrderTypeChange}>
+                </lightning-combobox>
+            </template>
+        </div>
+    </div>
+
+    <div class="slds-grid slds-wrap slds-m-top_large">
+        <div class="slds-col slds-size_3-of-12 slds-m-left_small">
+            <lightning-textarea class="validate" name="RefPONumber" type="text" label="Special Comments"
+                title="Special Comments" onchange={handleSpecialInstructions} value={splInstructions}>
+            </lightning-textarea>
+        </div>
+
+        <div class="slds-col slds-size_3-of-12 slds-m-left_small">
+            <template if:true={shippingSourceValues.data}>
+                <lightning-combobox name="progressA" label="Shipping Method" value={selectedShippingType}
+                    options={shippingSourceValues.data.values} onchange={handleShippingType}>
+                </lightning-combobox>
+            </template>
+        </div>
+    </div> -->
+
+    <div class="slds-m-top_large">
+    </div>
+
+    <div id="modal-content-id-1" style="margin: 0px 10px;">
+        <table id="newtable" class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+            <thead>
+                <tr>
+                    <th scope="col" class="slds-size_1-of-3">
+                        <div class="slds-truncate slds-align_absolute-center" title="Product"><b
+                                style="font-size: 15px;">Product</b></div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate slds-align_absolute-center" title="Quantity"><b
+                                style="font-size: 15px;">Quantity</b></div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate slds-align_absolute-center" title="List Price"><b
+                                style="font-size: 15px;">List Price</b></div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate slds-align_absolute-center" title="Discount"><b
+                                style="font-size: 15px;">Discount (%)</b> </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate slds-align_absolute-center" title="Discount Amount"><b
+                                style="font-size: 15px;">Discount ($)</b> </div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate slds-align_absolute-center" title="Cost Price"><b
+                                style="font-size: 15px;">Cost Price ($)</b></div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate slds-align_absolute-center" title="Total Price"><b
+                                style="font-size: 15px;">Total Price</b></div>
+                    </th>
+                    <th scope="col">
+                    </th>
+                    <th scope="col">
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody id="tableBody">
+                <template for:each={OrdersList} for:item="order" for:index="index">
+                    <tr key={keyIndex} class="eachRowTr">
+                        <td>
+                            <c-product-reusable-lookup label="" selected-icon-name="standard:product"
+                                onvalueselected={handleValueSelectedOnAccount} object-label="Product" access-key={index}
+                                id={index} required={isRequired} object-api-name="Product2" field-api-name="Name">
+                            </c-product-reusable-lookup>
+                        </td>
+
+                        <td>
+                            <lightning-input name="orderQuantity" required onchange={handleChange} access-key={index}
+                                id={index} type="number" value={order.Quantity}>
+                            </lightning-input>
+                        </td>
+
+                        <td>
+                            <lightning-input name="orderListPrice" disabled="true" onchange={handleChange}
+                                access-key={index} id={index} type="text" value={order.ListPrice}>
+                            </lightning-input>
+                        </td>
+
+                        <td>
+                            <lightning-input name="orderDiscount" min="0" max="100" onchange={handleChange}
+                                access-key={index} id={index} type="number" value={order.Discount}>
+                            </lightning-input>
+                        </td>
+
+                        <td>
+                            <lightning-input name="orderDiscountAmount" formatter="currency" step="any"
+                                onchange={handleChange} access-key={index} id={index} type="number"
+                                value={order.DiscountAmount}>
+                            </lightning-input>
+                        </td>
+                        <td>
+                            <lightning-input name="orderCostPrice" disabled="true" formatter="currency"
+                                access-key={index} id={index} type="text" value={order.CostPrice}>
+                            </lightning-input>
+                        </td>
+
+                        <td>
+                            <lightning-input name="orderTotalPrice" disabled="true" formatter="currency"
+                                onchange={handleChange} access-key={index} id={index} type="text"
+                                value={order.TotalPrice}>
+                            </lightning-input>
+                        </td>
+
+                        <td>
+                            <lightning-icon icon-name="action:new" access-key={index} alternative-text="Add Row"
+                                size="xx-small" title="Add" onclick={addRow}>
+                            </lightning-icon>
+                        </td>
+
+                        <td>
+                            <lightning-icon icon-name="action:delete" access-key={index} alternative-text="Delete Row"
+                                size="xx-small" title="Delete Row" onclick={removeDynamicRow}>
+                            </lightning-icon>
+                        </td>
+
+                    </tr>
+                </template>
+            </tbody>
+            <tr style="border: none; height:20px" class="slds-hint-parent">
+                <td colspan="8"></td>
+            </tr>
+            <tr>
+                <!-- <td colspan="2" style="text-align: right;"><b style="font-size: 15px;">Total List Price : </b></td> -->
+                <td colspan="3" style="text-align: right;">
+                        <b style="font-size: 15px;text-align: left;">
+                            <b>Total List Price :</b>
+                            ${totalListValue}</b>
+                </td>
+                <td colspan="2"></td>
+                <!-- <td style="text-align: right;"><b style="font-size: 15px;">Total Price : </b></td> -->
+                <td style="text-align: right;"><b style="font-size: 15px;">Total Price : ${totalPriceValue}</b> </td>
+                <td colspan="2"></td>
+            </tr>
+        </table>
+    </div>
+    <div class="slds-modal__footer slds-m-top_xx-large">
+        <!-- Success variant: Identifies a successful action -->
+        <!-- <lightning-button label="Save" title="Successful action" onclick={handleCreateBid} class="slds-m-left_x-small"></lightning-button> -->
+
+        <button class="slds-button slds-button_brand" style="width: 104px;" onclick={handleCreateOrder}>Save</button>
+        <button class="slds-button slds-button_brand" onclick={closeQuickAction}>Cancel</button>
+
+    </div>
+
+</template>

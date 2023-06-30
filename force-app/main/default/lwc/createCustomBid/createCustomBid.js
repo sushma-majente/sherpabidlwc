@@ -39,7 +39,8 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                         ListPrice: '',
                         Discount: this.accountRecord.Discount__c,
                         TotalPrice: '',
-                        DiscountAmount : 0
+                        CostPrice :'',
+                        DiscountAmount : 0,
                     });
 
                 }).catch(error => {
@@ -85,6 +86,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             ListPrice: '',
             Discount: this.accountRecord.Discount__c,
             TotalPrice: '',
+            CostPrice :'',
             DiscountAmount : 0
         });
         // console.log(this.keyIndex ,'==>', this.createBidList);
@@ -92,11 +94,11 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
 
     removeDynamicRow(event) {
         // console.info('Before remove Index :: ', event.target.accessKey);
-        const index = event.target.accessKey;
+        const index = parseInt(event.target.accessKey);
+
         if (this.createBidList.length > 1) {
             this.createBidList.splice(index, 1);
             this.keyIndex - 1;
-
             const userInputs = this.template.querySelectorAll("c-product-reusable-lookup")[index];
             const totalComponents = this.template.querySelectorAll("c-product-reusable-lookup");
 
@@ -148,6 +150,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
         let discountedValue = totalValue * (this.createBidList[currentIndex].Discount / 100);
         let discountAmount = this.createBidList[currentIndex].DiscountAmount != undefined && this.createBidList[currentIndex].DiscountAmount != '' ? this.createBidList[currentIndex].DiscountAmount: 0;
         this.createBidList[currentIndex].TotalPrice = Math.round(( parseFloat((totalValue - discountedValue) - discountAmount)  + Number.EPSILON) * 100) / 100 ;
+        this.createBidList[currentIndex].CostPrice =  this.createBidList[currentIndex].TotalPrice/this.createBidList[currentIndex].Quantity;
     }
 
     handleCreateBid(event) {
@@ -259,9 +262,13 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                 this.totalListValue += parseInt(element.Quantity)  * parseFloat(element.ListPrice);
             }
             if (element.TotalPrice != undefined && element.TotalPrice != '') {
-                this.totalPriceValue += parseFloat(element.TotalPrice);
+                this.totalPriceValue +=  this.getTwoDigitNumber(parseFloat(element.TotalPrice));
             }
         }
+    }
+
+    getTwoDigitNumber(num) {
+        return Math.round(( num  + Number.EPSILON) * 100) / 100
     }
 
 }

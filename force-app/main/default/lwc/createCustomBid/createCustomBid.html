@@ -11,14 +11,14 @@
     </div>
 
     <div style="margin: 0px 10px;">
-        <h1 style="margin: 0px 0px 5px 5px;"> Please select Bid Line Items: </h1>
+        <h1 style="margin: 0px 0px 5px 5px;"> <b>Please select Bid Line Items: </b></h1>
     </div>
 
     <div id="modal-content-id-1" style="margin: 0px 10px;">
         <table id="newtable" class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
             <thead>
                 <tr>
-                    <th scope="col">
+                    <th scope="col" class="slds-size_1-of-3">
                         <div class="slds-truncate slds-align_absolute-center" title="Product">Product</div>
                     </th>
                     <th scope="col">
@@ -28,10 +28,13 @@
                         <div class="slds-truncate slds-align_absolute-center" title="List Price">List Price</div>
                     </th>
                     <th scope="col">
-                        <div class="slds-truncate slds-align_absolute-center" title="Discount">Discount</div>
+                        <div class="slds-truncate slds-align_absolute-center" title="Discount">Discount (%)</div>
                     </th>
                     <th scope="col">
                         <div class="slds-truncate slds-align_absolute-center" title="Discount Amount">Discount ($)</div>
+                    </th>
+                    <th scope="col">
+                        <div class="slds-truncate slds-align_absolute-center" title="Cost Price">Cost Price ($)</div>
                     </th>
                     <th scope="col">
                         <div class="slds-truncate slds-align_absolute-center" title="Total Price">Total Price</div>
@@ -48,9 +51,9 @@
             <tbody id="tableBody">
                 <template for:each={createBidList} for:item="bid" for:index="index">
                     <tr key={keyIndex} class="eachRowTr">
-                        <td>
-                            <c-product-reusable-lookup label="" selected-icon-name="standard:account"
-                                onchange={handleChange} onvalueselected={handleValueSelectedOnAccount}
+                        <td class=slds-size_1-of-3>
+                            <c-product-reusable-lookup label="" selected-icon-name="standard:product"
+                                onvalueselected={handleValueSelectedOnAccount}
                                 object-label="Product" access-key={index} id={index} required={isRequired}
                                 object-api-name="Product2" field-api-name="Name">
                             </c-product-reusable-lookup>
@@ -82,6 +85,13 @@
                         </td>
 
                         <td>
+                            <lightning-input name="bidCostPrice" disabled="true" formatter="currency"
+                                access-key={index} id= {index} type="text"
+                                value={bid.CostPrice}>
+                            </lightning-input>
+                        </td>
+
+                        <td>
                             <lightning-input name="bidTotalPrice" disabled="true" formatter="currency"
                                 onchange={handleChange} access-key={index} id={index} type="text"
                                 value={bid.TotalPrice}>
@@ -103,6 +113,7 @@
                             <lightning-icon icon-name="action:delete" access-key={index} alternative-text="Delete Row"
                                 size="xx-small" title="Delete Row" onclick={removeDynamicRow}>
                             </lightning-icon>
+
                             <!-- <lightning-button-icon icon-name="action:delete" alternative-text="Delete"
                                 onclick={removeDynamicRow} class="test slds-m-left_xx-small" access-key={index}
                                 title="Delete"></lightning-button-icon> -->
@@ -111,13 +122,13 @@
                     </tr>
                 </template>
             </tbody>
-            <tr style="border: none; height:15px" class="slds-hint-parent">
+            <tr style="border: none; height:20px" class="slds-hint-parent">
                 <td colspan="8"></td>
             </tr>
             <tr>
                 <!-- <td colspan="2" style="text-align: right;">Total List Price : </td> -->
                 <td colspan="3" style="text-align: right;"> <b>Total List Price : ${totalListValue}</b></td>
-                <!-- <td></td> -->
+                <td></td>
                 <!-- <td style="text-align: right;">Total Price : </td> -->
                 <td colspan="3" style="text-align: right;"><b>Total Price : ${totalPriceValue}</b> </td>
                 <td colspan="2"></td>
@@ -125,6 +136,9 @@
         </table>
     </div>
     <div class="slds-modal__footer slds-m-top_xx-large">
-        <button class="slds-button slds-button_brand" onclick={handleCreateBid}>Save</button>
+        <!-- Success variant: Identifies a successful action -->
+        <!-- <lightning-button label="Save" title="Successful action" onclick={handleCreateBid} class="slds-m-left_x-small"></lightning-button> -->
+
+        <button class="slds-button slds-button_brand" style="width: 104px;"  onclick={handleCreateBid}>Save</button>
     </div>
 </template>

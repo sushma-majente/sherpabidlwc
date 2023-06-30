@@ -11,7 +11,9 @@ public with sharing class BidHandler {
     @AuraEnabled
     public static List<PRICEBOOKENTRY> getUnitPriceByProduct(string product2Id, string pricebookname){
         try {
-            return [SELECT Id, UnitPrice, PRICEBOOK2.NAME FROM PRICEBOOKENTRY where isactive = true and PRICEBOOK2.NAME =:pricebookname AND Product2Id =: product2Id];
+            return [SELECT Id, UnitPrice, PRICEBOOK2.NAME FROM PRICEBOOKENTRY where isactive = true 
+                    and PRICEBOOK2.NAME =:pricebookname
+                    AND Product2Id =: product2Id];
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }
@@ -42,10 +44,15 @@ public with sharing class BidHandler {
             for(BidWrapper bw : wrapperList) {
                 QuoteLineItem qli = new QuoteLineItem();
                 qli.PricebookEntryId = bw.PriceBookEntryId;
-                qli.UnitPrice  = bw.ListPrice;
+                qli.Original_Unit_Price__c = bw.ListPrice;
+                qli.UnitPrice  = bw.CostPrice;
                 qli.Quantity = Decimal.valueOf(bw.Quantity);
-                // qli.Discount = bw.Discount; // Validation rule stopping this.
-                qli.Cost_Price__c = bw.TotalPrice;
+                
+                qli.Discount = bw.Discount; // Validation rule stopping this.
+                if(bw.DiscountAmount > 0 && Decimal.valueOf(bw.Quantity) > 0) {
+                    qli.Discount_Amount__c = bw.DiscountAmount / Decimal.valueOf(bw.Quantity);
+                }
+                qli.Cost_Price__c = bw.CostPrice; // Unit Price
                 qli.quoteId = quoteObj.Id;
                 lstQuoteListItems.add(qli);
             }
