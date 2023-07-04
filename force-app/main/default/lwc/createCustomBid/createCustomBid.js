@@ -18,6 +18,9 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
     @track isRequired = true;
     @track bidName;
     @track createBidList = [];
+    @track currentPageRecord = "Account";
+    @track opportunityId = '';
+
 
     @wire(CurrentPageReference)
     getStateParameters(currentPageReference) {
@@ -29,7 +32,15 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
     connectedCallback() {
         try {
             loadStyle(this, modal);
-            getAccountById({ id: this.recordId })
+            if (this.recordId.startsWith('006')) {
+                this.currentPageRecord = 'Oppportunity';
+                this.opportunityId = this.recordId;
+            }
+            else {
+                this.currentPageRecord = 'Account';
+            }
+            // If Current Page Record is Opportunity then recordId is Opportunity
+            getAccountById({ id: this.recordId, isAccountRecord: this.currentPageRecord })
                 .then(accountResult => {
                     // console.info('accountResult', accountResult);
                     this.accountRecord = accountResult[0];
@@ -40,8 +51,8 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                         ListPrice: '',
                         Discount: this.accountRecord.Discount__c,
                         TotalPrice: '',
-                        CostPrice :'',
-                        DiscountAmount : 0,
+                        CostPrice: '',
+                        DiscountAmount: 0,
                     });
 
                 }).catch(error => {
@@ -87,8 +98,8 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             ListPrice: '',
             Discount: this.accountRecord.Discount__c,
             TotalPrice: '',
-            CostPrice :'',
-            DiscountAmount : 0
+            CostPrice: '',
+            DiscountAmount: 0
         });
         // console.log(this.keyIndex ,'==>', this.createBidList);
     }
@@ -138,7 +149,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
         if (event.target.name == 'bidListPrice') {
             this.createBidList[event.target.accessKey].ListPrice = event.target.value;
         }
-        if(event.target.name == 'bidDiscountAmount') {
+        if (event.target.name == 'bidDiscountAmount') {
             this.createBidList[event.target.accessKey].DiscountAmount = event.target.value;
             this.calculateListPrice(event.target.accessKey);
         }
@@ -149,16 +160,16 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
     calculateListPrice(currentIndex) {
         let totalValue = (this.createBidList[currentIndex].Quantity * this.createBidList[currentIndex].ListPrice);
         let discountedValue = totalValue * (this.createBidList[currentIndex].Discount / 100);
-        let discountAmount = this.createBidList[currentIndex].DiscountAmount != undefined && this.createBidList[currentIndex].DiscountAmount != '' ? this.createBidList[currentIndex].DiscountAmount: 0;
-        this.createBidList[currentIndex].TotalPrice = Math.round(( parseFloat((totalValue - discountedValue) - discountAmount)  + Number.EPSILON) * 100) / 100 ;
-        this.createBidList[currentIndex].CostPrice =  this.createBidList[currentIndex].TotalPrice/this.createBidList[currentIndex].Quantity;
+        let discountAmount = this.createBidList[currentIndex].DiscountAmount != undefined && this.createBidList[currentIndex].DiscountAmount != '' ? this.createBidList[currentIndex].DiscountAmount : 0;
+        this.createBidList[currentIndex].TotalPrice = Math.round((parseFloat((totalValue - discountedValue) - discountAmount) + Number.EPSILON) * 100) / 100;
+        this.createBidList[currentIndex].CostPrice = this.createBidList[currentIndex].TotalPrice / this.createBidList[currentIndex].Quantity;
     }
 
     async saveOrderToDB() {
         const result = await LightningConfirm.open({
             message: "Are you sure you want to Save?",
             label: "Save",
-            theme:"success"
+            theme: "success"
         });
         if (result) {
             this.handleCreateBid(null);
@@ -220,7 +231,8 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
     saveQuoteLineItems() {
         SaveMultipleBids({
             jsonString: JSON.stringify(this.createBidList),
-            QuoteName: this.bidName
+            QuoteName: this.bidName,
+            optyId : this.opportunityId
         })
             .then(saveResult => {
                 let quoteName = saveResult.Name;
@@ -281,22 +293,22 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
     }
 
     @track totalListValue = 0;
-    @track totalPriceValue =0 ;
+    @track totalPriceValue = 0;
 
     aggregateValues() {
         for (let index = 0; index < this.createBidList.length; index++) {
             const element = this.createBidList[index];
             if (element.ListPrice != undefined && element.ListPrice != '') {
-                this.totalListValue += parseInt(element.Quantity)  * parseFloat(element.ListPrice);
+                this.totalListValue += parseInt(element.Quantity) * parseFloat(element.ListPrice);
             }
             if (element.TotalPrice != undefined && element.TotalPrice != '') {
-                this.totalPriceValue +=  this.getTwoDigitNumber(parseFloat(element.TotalPrice));
+                this.totalPriceValue += this.getTwoDigitNumber(parseFloat(element.TotalPrice));
             }
         }
     }
 
     getTwoDigitNumber(num) {
-        return Math.round(( num  + Number.EPSILON) * 100) / 100
+        return Math.round((num + Number.EPSILON) * 100) / 100
     }
 
 }

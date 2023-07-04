@@ -61,7 +61,7 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
             loadStyle(this, modal);
             this.totalListValue = 0;
             this.totalPriceValue = 0;
-            getAccountById({ id: this.recordId })
+            getAccountById({ id: this.recordId, isAccountRecord : 'Account' })
                 .then(accountResult => {
                     this.accountRecord = accountResult[0];
                     this.OrdersList.push({
