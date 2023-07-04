@@ -172,7 +172,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             theme: "success"
         });
         if (result) {
-            this.handleCreateBid(null);
+            this.saveQuoteLineItems();
         } else {
             //do something else 
         }
@@ -224,7 +224,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             this.showValidationToast();
         }
         else {
-            this.saveQuoteLineItems();
+            this.saveOrderToDB();
         }
     }
 

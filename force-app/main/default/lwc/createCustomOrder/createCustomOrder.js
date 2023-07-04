@@ -61,7 +61,7 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
             loadStyle(this, modal);
             this.totalListValue = 0;
             this.totalPriceValue = 0;
-            getAccountById({ id: this.recordId, isAccountRecord : 'Account' })
+            getAccountById({ id: this.recordId, isAccountRecord: 'Account' })
                 .then(accountResult => {
                     this.accountRecord = accountResult[0];
                     this.OrdersList.push({
@@ -71,7 +71,7 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
                         ListPrice: '',
                         Discount: this.accountRecord.Discount__c,
                         TotalPrice: '',
-                        CostPrice : '',
+                        CostPrice: '',
                         DiscountAmount: 0
                     });
 
@@ -115,7 +115,7 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
             ListPrice: '',
             Discount: this.accountRecord.Discount__c,
             TotalPrice: '',
-            CostPrice : '',
+            CostPrice: '',
             DiscountAmount: 0
         });
     }
@@ -195,8 +195,8 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
         let discountedValue = totalValue * (this.OrdersList[currentIndex].Discount / 100);
         let discountAmount = this.OrdersList[currentIndex].DiscountAmount != undefined && this.OrdersList[currentIndex].DiscountAmount != '' ? this.OrdersList[currentIndex].DiscountAmount : 0;
         this.OrdersList[currentIndex].TotalPrice = Math.round((parseFloat((totalValue - discountedValue) - discountAmount) + Number.EPSILON) * 100) / 100;
-        if(this.OrdersList[currentIndex].Quantity != undefined && this.OrdersList[currentIndex].Quantity != ''){
-            this.OrdersList[currentIndex].CostPrice =  this.OrdersList[currentIndex].TotalPrice/this.OrdersList[currentIndex].Quantity;
+        if (this.OrdersList[currentIndex].Quantity != undefined && this.OrdersList[currentIndex].Quantity != '') {
+            this.OrdersList[currentIndex].CostPrice = this.OrdersList[currentIndex].TotalPrice / this.OrdersList[currentIndex].Quantity;
         }
     }
 
@@ -245,18 +245,7 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
             this.showValidationToast();
         }
         else {
-            // SAVE Ticket
-            SaveOrders({
-                jsonString: JSON.stringify(this.OrdersList), accountId: this.recordId, poNumber: this.referencePONumber,
-                specialComments: this.splInstructions, orderType: this.selectedOrderType, shippingType: this.selectedShippingType
-            })
-                .then(result => {
-                    let OrderNumber = result.OrderNumber;
-                    let orderId = result.Id;
-                    this.showSuccessToast(OrderNumber, orderId);
-                }).catch(error => {
-                    console.error(error);
-                });
+            this.saveOrderToDB();
         }
     }
 
@@ -280,10 +269,20 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
         const result = await LightningConfirm.open({
             message: "Are you sure you want to Save?",
             label: "Save",
-            theme:"success"
+            theme: "success"
         });
         if (result) {
-            this.handleCreateOrder(null);
+            SaveOrders({
+                jsonString: JSON.stringify(this.OrdersList), accountId: this.recordId, poNumber: this.referencePONumber,
+                specialComments: this.splInstructions, orderType: this.selectedOrderType, shippingType: this.selectedShippingType
+            })
+                .then(result => {
+                    let OrderNumber = result.OrderNumber;
+                    let orderId = result.Id;
+                    this.showSuccessToast(OrderNumber, orderId);
+                }).catch(error => {
+                    console.error(error);
+                });
         } else {
             //do something else 
         }
