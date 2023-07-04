@@ -9,6 +9,16 @@ public with sharing class BidHandler {
     }
     
     @AuraEnabled
+    public static List<Opportunity> getAccountRecordByOpptyId(String id) {
+        try {
+            return [SELECT Id, AccountId, account.Name, account.Discount__c from Opportunity WHERE ID=:id WITH SECURITY_ENFORCED];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+    
+    
+    @AuraEnabled
     public static List<PRICEBOOKENTRY> getUnitPriceByProduct(string product2Id, string pricebookname){
         try {
             return [SELECT Id, UnitPrice, PRICEBOOK2.NAME FROM PRICEBOOKENTRY where isactive = true 
@@ -49,8 +59,8 @@ public with sharing class BidHandler {
                 qli.Quantity = Decimal.valueOf(bw.Quantity);
                 
                 qli.Discount = bw.Discount; // Validation rule stopping this.
-                if(bw.DiscountAmount > 0 && Decimal.valueOf(bw.Quantity) > 0) {
-                    qli.Discount_Amount__c = bw.DiscountAmount / Decimal.valueOf(bw.Quantity);
+                if(bw.DiscountAmount > 0) {
+                    qli.Discount_Amount__c = bw.DiscountAmount;
                 }
                 qli.Cost_Price__c = bw.CostPrice; // Unit Price
                 qli.quoteId = quoteObj.Id;

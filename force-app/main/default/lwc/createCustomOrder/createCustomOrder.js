@@ -18,6 +18,9 @@ import ORDER from '@salesforce/schema/Order';
 import { getPicklistValues } from 'lightning/uiObjectInfoApi';
 import { getObjectInfo } from 'lightning/uiObjectInfoApi';
 
+import LightningConfirm from "lightning/confirm";
+
+
 export default class CreateCustomOrder extends NavigationMixin(LightningElement) {
 
     @api recordId;
@@ -91,6 +94,7 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
                 this.OrdersList[event.detail.selectedRecord.index].ProductId = event.detail.selectedRecord.id;
                 this.OrdersList[event.detail.selectedRecord.index].ListPrice = result != undefined && result.length > 0 ? result[0].UnitPrice : 0;
                 this.OrdersList[event.detail.selectedRecord.index].PriceBookEntryId = result[0].Id;
+                this.OrdersList[event.detail.selectedRecord.index].CostPrice = 0;
                 this.calculateListPrice(event.detail.selectedRecord.index);
             })
             .catch(error => {
@@ -191,7 +195,9 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
         let discountedValue = totalValue * (this.OrdersList[currentIndex].Discount / 100);
         let discountAmount = this.OrdersList[currentIndex].DiscountAmount != undefined && this.OrdersList[currentIndex].DiscountAmount != '' ? this.OrdersList[currentIndex].DiscountAmount : 0;
         this.OrdersList[currentIndex].TotalPrice = Math.round((parseFloat((totalValue - discountedValue) - discountAmount) + Number.EPSILON) * 100) / 100;
-        this.OrdersList[currentIndex].CostPrice =  this.OrdersList[currentIndex].TotalPrice/this.OrdersList[currentIndex].Quantity;
+        if(this.OrdersList[currentIndex].Quantity != undefined && this.OrdersList[currentIndex].Quantity != ''){
+            this.OrdersList[currentIndex].CostPrice =  this.OrdersList[currentIndex].TotalPrice/this.OrdersList[currentIndex].Quantity;
+        }
     }
 
     aggregateValues() {
@@ -268,6 +274,32 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
 
     closeQuickAction() {
         this.dispatchEvent(new CloseActionScreenEvent());
+    }
+
+    async saveOrderToDB() {
+        const result = await LightningConfirm.open({
+            message: "Are you sure you want to Save?",
+            label: "Save",
+            theme:"success"
+        });
+        if (result) {
+            this.handleCreateOrder(null);
+        } else {
+            //do something else 
+        }
+    }
+
+    async closewindow() {
+        const result = await LightningConfirm.open({
+            message: "Are you sure you want to Cancel this?",
+            theme: "warning",
+            label: "Warning"
+        });
+        if (result) {
+            this.dispatchEvent(new CloseActionScreenEvent());
+        } else {
+            //do something else 
+        }
     }
 
     navigateToRecordPage(orderId) {

@@ -8,6 +8,8 @@ import modal from "@salesforce/resourceUrl/CreateBidCss";
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { NavigationMixin } from 'lightning/navigation';
+import LightningConfirm from "lightning/confirm";
+
 
 export default class CreateCustomBid extends NavigationMixin(LightningElement) {
     @api recordId;
@@ -31,7 +33,6 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                 .then(accountResult => {
                     // console.info('accountResult', accountResult);
                     this.accountRecord = accountResult[0];
-
                     this.createBidList.push({
                         ProductId: '',
                         AccountId: this.accountRecord.Id,
@@ -44,7 +45,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                     });
 
                 }).catch(error => {
-                    // console.error(error);
+                    console.log(error);
                 })
         }
         catch (error) {
@@ -152,6 +153,33 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
         this.createBidList[currentIndex].TotalPrice = Math.round(( parseFloat((totalValue - discountedValue) - discountAmount)  + Number.EPSILON) * 100) / 100 ;
         this.createBidList[currentIndex].CostPrice =  this.createBidList[currentIndex].TotalPrice/this.createBidList[currentIndex].Quantity;
     }
+
+    async saveOrderToDB() {
+        const result = await LightningConfirm.open({
+            message: "Are you sure you want to Save?",
+            label: "Save",
+            theme:"success"
+        });
+        if (result) {
+            this.handleCreateBid(null);
+        } else {
+            //do something else 
+        }
+    }
+
+    async closewindow() {
+        const result = await LightningConfirm.open({
+            message: "Are you sure you want to Cancel this?",
+            theme: "warning",
+            label: "Warning"
+        });
+        if (result) {
+            this.dispatchEvent(new CloseActionScreenEvent());
+        } else {
+            //do something else 
+        }
+    }
+
 
     handleCreateBid(event) {
         //

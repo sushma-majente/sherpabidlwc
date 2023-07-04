@@ -19,25 +19,33 @@
             <thead>
                 <tr>
                     <th scope="col" class="slds-size_1-of-3">
-                        <div class="slds-truncate slds-align_absolute-center" title="Product">Product</div>
+                        <div class="slds-truncate slds-align_absolute-center" title="Product">
+                            <b style="font-size: 15px;">Product</b>
+                        </div>
                     </th>
                     <th scope="col">
-                        <div class="slds-truncate slds-align_absolute-center" title="Quantity">Quantity</div>
+                        <div class="slds-truncate slds-align_absolute-center" title="Quantity">
+                            <b style="font-size: 15px;">Quantity</b></div>
                     </th>
                     <th scope="col">
-                        <div class="slds-truncate slds-align_absolute-center" title="List Price">List Price</div>
+                        <div class="slds-truncate slds-align_absolute-center" title="List Price">
+                            <b style="font-size: 15px;">Dealer Price</b></div>
                     </th>
                     <th scope="col">
-                        <div class="slds-truncate slds-align_absolute-center" title="Discount">Discount (%)</div>
+                        <div class="slds-truncate slds-align_absolute-center" title="Discount">
+                            <b style="font-size: 15px;">Discount (%)</b></div>
                     </th>
                     <th scope="col">
-                        <div class="slds-truncate slds-align_absolute-center" title="Discount Amount">Discount ($)</div>
+                        <div class="slds-truncate slds-align_absolute-center" title="Discount Amount">
+                            <b style="font-size: 15px;">Discount ($)</b></div>
                     </th>
                     <th scope="col">
-                        <div class="slds-truncate slds-align_absolute-center" title="Cost Price">Cost Price ($)</div>
+                        <div class="slds-truncate slds-align_absolute-center" title="Cost Price">
+                            <b style="font-size: 15px;">Unit Cost ($)</b></div>
                     </th>
                     <th scope="col">
-                        <div class="slds-truncate slds-align_absolute-center" title="Total Price">Total Price</div>
+                        <div class="slds-truncate slds-align_absolute-center" title="Total Price">
+                            <b style="font-size: 15px;">Total Price</b></div>
                     </th>
                     <th scope="col">
                         <!-- <div class="slds-truncate" title="Add Row">Add</div> -->
@@ -123,22 +131,20 @@
                 </template>
             </tbody>
             <tr style="border: none; height:20px" class="slds-hint-parent">
-                <td colspan="8"></td>
+                <td colspan="9"></td>
             </tr>
             <tr>
-                <!-- <td colspan="2" style="text-align: right;">Total List Price : </td> -->
-                <td colspan="3" style="text-align: right;"> <b>Total List Price : ${totalListValue}</b></td>
-                <td></td>
-                <!-- <td style="text-align: right;">Total Price : </td> -->
-                <td colspan="3" style="text-align: right;"><b>Total Price : ${totalPriceValue}</b> </td>
+                <td colspan="3" style="text-align: right;"> <b style="font-size: 15px;text-align: left;"> <b>Regular Dealer Price Sub Total :</b>
+                    ${totalListValue}</b>
+                </td>
+                <!-- <td></td> -->
+                <td colspan="4" style="text-align: right;"><b style="font-size: 15px;">Total Price : ${totalPriceValue}</b> </td>
                 <td colspan="2"></td>
             </tr>
         </table>
     </div>
     <div class="slds-modal__footer slds-m-top_xx-large">
-        <!-- Success variant: Identifies a successful action -->
-        <!-- <lightning-button label="Save" title="Successful action" onclick={handleCreateBid} class="slds-m-left_x-small"></lightning-button> -->
-
-        <button class="slds-button slds-button_brand" style="width: 104px;"  onclick={handleCreateBid}>Save</button>
+        <button class="slds-button slds-button_brand" onclick= {saveOrderToDB}>Save</button>
+        <button class="slds-button slds-button_neutral" onclick= {closewindow}>Cancel</button>
     </div>
 </template>

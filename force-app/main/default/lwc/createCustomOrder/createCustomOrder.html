@@ -20,7 +20,7 @@
             </div>
             <div class="slds-col slds-size_2-of-4 slds-m-left_small">
                 <template if:true={shippingSourceValues.data}>
-                    <lightning-combobox name="progressA" label="Shipping Method" value={selectedShippingType}
+                    <lightning-combobox name="progressA" label="Shipping Method" required value={selectedShippingType}
                         options={shippingSourceValues.data.values} onchange={handleShippingType}>
                     </lightning-combobox>
                 </template>
@@ -29,46 +29,15 @@
 
         <div class="slds-col .slds-size_2-of-4 slds-m-left_small">
             <div class="slds-col slds-size_2-of-4 slds-m-left_small">
-                <lightning-textarea class="validate" name="RefPONumber" type="text" label="Special Comments"
+                <lightning-textarea class="validate" name="RefPONumber" type="text" label="Special Instructions/Comments"
                     title="Special Comments" onchange={handleSpecialInstructions} value={splInstructions}>
                 </lightning-textarea>
             </div>
         </div>
     </div>
 
-    <!-- <div class="slds-grid slds-wrap slds-m-top_large">
-        <div class="slds-col slds-size_3-of-12 slds-m-left_small">
-            <lightning-input name="RefPONumber" type="text" label="Reference/PO Number" title="Reference/PO Number"
-                onchange={handlePONumberChange} value={referencePONumber} required>
-            </lightning-input>
-        </div>
-
-        <div class="slds-col slds-size_3-of-12 slds-m-left_small">
-            <template if:true={orderSourceValues.data}>
-                <lightning-combobox class="validate" name="progress" label="Order Type" value={selectedOrderType}
-                    required options={orderSourceValues.data.values} onchange={handleOrderTypeChange}>
-                </lightning-combobox>
-            </template>
-        </div>
-    </div>
-
-    <div class="slds-grid slds-wrap slds-m-top_large">
-        <div class="slds-col slds-size_3-of-12 slds-m-left_small">
-            <lightning-textarea class="validate" name="RefPONumber" type="text" label="Special Comments"
-                title="Special Comments" onchange={handleSpecialInstructions} value={splInstructions}>
-            </lightning-textarea>
-        </div>
-
-        <div class="slds-col slds-size_3-of-12 slds-m-left_small">
-            <template if:true={shippingSourceValues.data}>
-                <lightning-combobox name="progressA" label="Shipping Method" value={selectedShippingType}
-                    options={shippingSourceValues.data.values} onchange={handleShippingType}>
-                </lightning-combobox>
-            </template>
-        </div>
-    </div> -->
-
     <div class="slds-m-top_large">
+        <h1 style="margin: 0px 0px 5px 5px;"> <b>Please select Bid Line Items: </b></h1>
     </div>
 
     <div id="modal-content-id-1" style="margin: 0px 10px;">
@@ -85,7 +54,7 @@
                     </th>
                     <th scope="col">
                         <div class="slds-truncate slds-align_absolute-center" title="List Price"><b
-                                style="font-size: 15px;">List Price</b></div>
+                                style="font-size: 15px;">Dealer Price</b></div>
                     </th>
                     <th scope="col">
                         <div class="slds-truncate slds-align_absolute-center" title="Discount"><b
@@ -97,7 +66,7 @@
                     </th>
                     <th scope="col">
                         <div class="slds-truncate slds-align_absolute-center" title="Cost Price"><b
-                                style="font-size: 15px;">Cost Price ($)</b></div>
+                                style="font-size: 15px;">Unit Cost ($)</b></div>
                     </th>
                     <th scope="col">
                         <div class="slds-truncate slds-align_absolute-center" title="Total Price"><b
@@ -173,29 +142,21 @@
                 </template>
             </tbody>
             <tr style="border: none; height:20px" class="slds-hint-parent">
-                <td colspan="8"></td>
+                <td colspan="9"></td>
             </tr>
             <tr>
-                <!-- <td colspan="2" style="text-align: right;"><b style="font-size: 15px;">Total List Price : </b></td> -->
-                <td colspan="3" style="text-align: right;">
-                        <b style="font-size: 15px;text-align: left;">
-                            <b>Total List Price :</b>
-                            ${totalListValue}</b>
+                <td colspan="3" style="text-align: right;"> <b style="font-size: 15px;text-align: left;"> <b>Regular Dealer Price Sub Total :</b>
+                    ${totalListValue}</b>
                 </td>
-                <td colspan="2"></td>
-                <!-- <td style="text-align: right;"><b style="font-size: 15px;">Total Price : </b></td> -->
-                <td style="text-align: right;"><b style="font-size: 15px;">Total Price : ${totalPriceValue}</b> </td>
+                <!-- <td></td> -->
+                <td colspan="4" style="text-align: right;"><b style="font-size: 15px;">Total Price : ${totalPriceValue}</b> </td>
                 <td colspan="2"></td>
             </tr>
         </table>
     </div>
     <div class="slds-modal__footer slds-m-top_xx-large">
-        <!-- Success variant: Identifies a successful action -->
-        <!-- <lightning-button label="Save" title="Successful action" onclick={handleCreateBid} class="slds-m-left_x-small"></lightning-button> -->
-
-        <button class="slds-button slds-button_brand" style="width: 104px;" onclick={handleCreateOrder}>Save</button>
-        <button class="slds-button slds-button_brand" onclick={closeQuickAction}>Cancel</button>
-
+        <button class="slds-button slds-button_brand" onclick= {saveOrderToDB}>Save</button>
+        <button class="slds-button slds-button_neutral" onclick= {closewindow}>Cancel</button>
     </div>
 
 </template>
