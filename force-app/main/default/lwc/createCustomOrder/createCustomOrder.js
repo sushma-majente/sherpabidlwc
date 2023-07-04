@@ -249,6 +249,12 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
         }
     }
 
+    handleEnter(event){
+        if(event.keyCode === 13){
+            this.addRow();
+        }
+      }
+
     showSuccessToast(OrderNumber, orderId) {
         const evt = new ShowToastEvent({
             title: `Order : ${OrderNumber} created successful`,
@@ -267,7 +273,7 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
 
     async saveOrderToDB() {
         const result = await LightningConfirm.open({
-            message: "Are you sure you want to Save?",
+            message: "Are you sure you want to save?",
             label: "Save",
             theme: "success"
         });
@@ -290,7 +296,7 @@ export default class CreateCustomOrder extends NavigationMixin(LightningElement)
 
     async closewindow() {
         const result = await LightningConfirm.open({
-            message: "Are you sure you want to Cancel this?",
+            message: "Are you sure you want to cancel?",
             theme: "warning",
             label: "Warning"
         });

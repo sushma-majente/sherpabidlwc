@@ -20,7 +20,8 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
     @track createBidList = [];
     @track currentPageRecord = "Account";
     @track opportunityId = '';
-
+    @track totalListValue = 0;
+    @track totalPriceValue = 0;
 
     @wire(CurrentPageReference)
     getStateParameters(currentPageReference) {
@@ -51,7 +52,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
                         ListPrice: '',
                         Discount: this.accountRecord.Discount__c,
                         TotalPrice: '',
-                        CostPrice: '',
+                        CostPrice: '0',
                         DiscountAmount: 0,
                     });
 
@@ -98,7 +99,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             ListPrice: '',
             Discount: this.accountRecord.Discount__c,
             TotalPrice: '',
-            CostPrice: '',
+            CostPrice: '0',
             DiscountAmount: 0
         });
         // console.log(this.keyIndex ,'==>', this.createBidList);
@@ -162,12 +163,14 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
         let discountedValue = totalValue * (this.createBidList[currentIndex].Discount / 100);
         let discountAmount = this.createBidList[currentIndex].DiscountAmount != undefined && this.createBidList[currentIndex].DiscountAmount != '' ? this.createBidList[currentIndex].DiscountAmount : 0;
         this.createBidList[currentIndex].TotalPrice = Math.round((parseFloat((totalValue - discountedValue) - discountAmount) + Number.EPSILON) * 100) / 100;
-        this.createBidList[currentIndex].CostPrice = this.createBidList[currentIndex].TotalPrice / this.createBidList[currentIndex].Quantity;
+        if (this.createBidList[currentIndex].Quantity != undefined && this.createBidList[currentIndex].Quantity != '') {
+            this.createBidList[currentIndex].CostPrice = this.createBidList[currentIndex].TotalPrice / this.createBidList[currentIndex].Quantity;
+        }
     }
 
     async saveOrderToDB() {
         const result = await LightningConfirm.open({
-            message: "Are you sure you want to Save?",
+            message: "Are you sure you want to save?",
             label: "Save",
             theme: "success"
         });
@@ -180,7 +183,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
 
     async closewindow() {
         const result = await LightningConfirm.open({
-            message: "Are you sure you want to Cancel this?",
+            message: "Are you sure you want to cancel?",
             theme: "warning",
             label: "Warning"
         });
@@ -227,6 +230,12 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
             this.saveOrderToDB();
         }
     }
+
+    handleEnter(event){
+        if(event.keyCode === 13){
+            this.addRow();
+        }
+      }
 
     saveQuoteLineItems() {
         SaveMultipleBids({
@@ -292,8 +301,7 @@ export default class CreateCustomBid extends NavigationMixin(LightningElement) {
         });
     }
 
-    @track totalListValue = 0;
-    @track totalPriceValue = 0;
+    
 
     aggregateValues() {
         for (let index = 0; index < this.createBidList.length; index++) {

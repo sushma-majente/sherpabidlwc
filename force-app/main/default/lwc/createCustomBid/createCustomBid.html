@@ -18,7 +18,7 @@
         <table id="newtable" class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
             <thead>
                 <tr>
-                    <th scope="col" class="slds-size_1-of-3">
+                    <th scope="col" style="width: 200%;">
                         <div class="slds-truncate slds-align_absolute-center" title="Product">
                             <b style="font-size: 15px;">Product</b>
                         </div>
@@ -59,7 +59,7 @@
             <tbody id="tableBody">
                 <template for:each={createBidList} for:item="bid" for:index="index">
                     <tr key={keyIndex} class="eachRowTr">
-                        <td class=slds-size_1-of-3>
+                        <td>
                             <c-product-reusable-lookup label="" selected-icon-name="standard:product"
                                 onvalueselected={handleValueSelectedOnAccount}
                                 object-label="Product" access-key={index} id={index} required={isRequired}
@@ -68,7 +68,7 @@
                         </td>
 
                         <td>
-                            <lightning-input name="bidQuantity" required onchange={handleChange} access-key={index}
+                            <lightning-input name="bidQuantity" onkeypress= {handleEnter} required onchange={handleChange} access-key={index}
                                 id={index} type="number" value={bid.Quantity}>
                             </lightning-input>
                         </td>
@@ -80,13 +80,13 @@
                         </td>
 
                         <td>
-                            <lightning-input name="bidDiscount" min="0" max="100" onchange={handleChange}
+                            <lightning-input name="bidDiscount" onkeypress= {handleEnter} min="0" max="100" onchange={handleChange}
                                 access-key={index} id={index} type="number" value={bid.Discount}>
                             </lightning-input>
                         </td>
 
                         <td>
-                            <lightning-input name="bidDiscountAmount" formatter="currency" step="any"
+                            <lightning-input name="bidDiscountAmount" onkeypress= {handleEnter} formatter="currency" step="any"
                                 onchange={handleChange} access-key={index} id={index} type="number"
                                 value={bid.DiscountAmount}>
                             </lightning-input>
@@ -134,17 +134,19 @@
                 <td colspan="9"></td>
             </tr>
             <tr>
-                <td colspan="3" style="text-align: right;"> <b style="font-size: 15px;text-align: left;"> <b>Regular Dealer Price Sub Total :</b>
-                    ${totalListValue}</b>
+                <td colspan="2" style="text-align: right;"> <b style="font-size: 15px;text-align: left;"> <b>Regular Dealer Price Subtotal :</b>
+                    </b>
                 </td>
-                <!-- <td></td> -->
-                <td colspan="4" style="text-align: right;"><b style="font-size: 15px;">Total Price : ${totalPriceValue}</b> </td>
+                <td>${totalListValue}</td>
+                <td colspan="3" style="text-align: right;"><b style="font-size: 15px;">Total Price : </b> </td>
+                <td>${totalPriceValue}</td>
                 <td colspan="2"></td>
             </tr>
         </table>
     </div>
     <div class="slds-modal__footer slds-m-top_xx-large">
-        <button class="slds-button slds-button_brand" onclick= {handleCreateBid}>Save</button>
         <button class="slds-button slds-button_neutral" onclick= {closewindow}>Cancel</button>
+        <button class="slds-button slds-button_brand" onclick= {handleCreateBid}>Save</button>
+
     </div>
 </template>

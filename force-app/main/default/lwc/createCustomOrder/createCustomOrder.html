@@ -4,7 +4,8 @@
     </div>
 
     <div class="slds-grid slds-wrap slds-m-top_large">
-        <div class="slds-col .slds-size_2-of-4 slds-m-left_small">
+        <div class="slds-col .slds-size_1-of-2 slds-m-left_small">
+
             <div class="slds-col slds-size_2-of-4 slds-m-left_small">
                 <lightning-input name="RefPONumber" type="text" label="Reference/PO Number" title="Reference/PO Number"
                     onchange={handlePONumberChange} value={referencePONumber} required>
@@ -27,10 +28,11 @@
             </div>
         </div>
 
-        <div class="slds-col .slds-size_2-of-4 slds-m-left_small">
+        <div style="height: 130px;" class="slds-col .slds-size_2-of-2 slds-m-left_small">
             <div class="slds-col slds-size_2-of-4 slds-m-left_small">
-                <lightning-textarea class="validate" name="RefPONumber" type="text" label="Special Instructions/Comments"
-                    title="Special Comments" onchange={handleSpecialInstructions} value={splInstructions}>
+                <lightning-textarea class="validate" name="specialInstructions" type="text"
+                    label="Special Instructions/Comments" title="Special Comments" onchange={handleSpecialInstructions}
+                    value={splInstructions}>
                 </lightning-textarea>
             </div>
         </div>
@@ -44,7 +46,7 @@
         <table id="newtable" class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
             <thead>
                 <tr>
-                    <th scope="col" class="slds-size_1-of-3">
+                    <th scope="col" style="width: 200%;">
                         <div class="slds-truncate slds-align_absolute-center" title="Product"><b
                                 style="font-size: 15px;">Product</b></div>
                     </th>
@@ -90,8 +92,9 @@
                         </td>
 
                         <td>
-                            <lightning-input name="orderQuantity" required onchange={handleChange} access-key={index}
-                                id={index} type="number" value={order.Quantity}>
+                            <lightning-input name="orderQuantity" onkeypress={handleEnter} required
+                                onchange={handleChange} access-key={index} id={index} type="number"
+                                value={order.Quantity}>
                             </lightning-input>
                         </td>
 
@@ -102,14 +105,15 @@
                         </td>
 
                         <td>
-                            <lightning-input name="orderDiscount" min="0" max="100" onchange={handleChange}
-                                access-key={index} id={index} type="number" value={order.Discount}>
+                            <lightning-input name="orderDiscount" onkeypress={handleEnter} min="0" max="100"
+                                onchange={handleChange} access-key={index} id={index} type="number"
+                                value={order.Discount}>
                             </lightning-input>
                         </td>
 
                         <td>
-                            <lightning-input name="orderDiscountAmount" formatter="currency" step="any"
-                                onchange={handleChange} access-key={index} id={index} type="number"
+                            <lightning-input name="orderDiscountAmount" onkeypress={handleEnter} formatter="currency"
+                                step="any" onchange={handleChange} access-key={index} id={index} type="number"
                                 value={order.DiscountAmount}>
                             </lightning-input>
                         </td>
@@ -145,18 +149,19 @@
                 <td colspan="9"></td>
             </tr>
             <tr>
-                <td colspan="3" style="text-align: right;"> <b style="font-size: 15px;text-align: left;"> <b>Regular Dealer Price Sub Total :</b>
-                    ${totalListValue}</b>
-                </td>
-                <!-- <td></td> -->
-                <td colspan="4" style="text-align: right;"><b style="font-size: 15px;">Total Price : ${totalPriceValue}</b> </td>
-                <td colspan="2"></td>
+                <td colspan="2" style="text-align: right;"> <b style="font-size: 15px;text-align: left;"> <b>Regular Dealer Price Subtotal :</b>
+                </b>
+            </td>
+            <td>${totalListValue}</td>
+            <td colspan="3" style="text-align: right;"><b style="font-size: 15px;">Total Price : </b> </td>
+            <td>${totalPriceValue}</td>
+            <td colspan="2"></td>
             </tr>
         </table>
     </div>
     <div class="slds-modal__footer slds-m-top_xx-large">
-        <button class="slds-button slds-button_brand" onclick= {handleCreateOrder}>Save</button>
-        <button class="slds-button slds-button_neutral" onclick= {closewindow}>Cancel</button>
+        <button class="slds-button slds-button_neutral" onclick={closewindow}>Cancel</button>
+        <button class="slds-button slds-button_brand" onclick={handleCreateOrder}>Save</button>
     </div>
 
 </template>
